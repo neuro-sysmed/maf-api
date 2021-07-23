@@ -3,14 +3,13 @@ CREATE TABLE project (
   name  VARCHAR(80) UNIQUE
 );
 
-
 CREATE TABLE variant (
   id    UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
 
-  chr             VARCHAR(8) NOT NULL ,
+  chr             VARCHAR(8) NOT NULL,
   pos 		      INT NOT NULL,
-  ref             VARCHAR(100) NOT NULL ,
-  alt             VARCHAR(100) NOT NULL ,
+  ref             VARCHAR(100) NOT NULL,
+  alt             VARCHAR(100) NOT NULL
 
 );
 
@@ -25,12 +24,7 @@ CREATE TABLE project_variant (
 
   MAF		         FLOAT,	  
   quality	         FLOAT,  
-  allele_count	     INT NOT NULL,
-
-
-  PRIMARY KEY idx  (sid, vid),
-  KEY sid_idx  (sid),
-  KEY vid_idx  (vid)
+  allele_count	     INT NOT NULL
 );
 
 CREATE INDEX project_variant_proj_idx ON project_variant(project_id);
@@ -40,9 +34,7 @@ CREATE TABLE gene (
   id              UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
 
   name		      VARCHAR(80),
-  transcript      VARCHAR(200),
-
-  KEY name_idx (name)
+  transcript      VARCHAR(200)
 );
 
 CREATE INDEX gene_name_idx ON gene(name);
@@ -63,11 +55,7 @@ CREATE TABLE variant_annotation (
   DNA_change VARCHAR(80),
   AA_change  VARCHAR(80),
   polyphen   VARCHAR(80),
-  sift       VARCHAR(80),
-
-
-  KEY gid_idx (gid),
-  KEY vid_idx (vid)
+  sift       VARCHAR(80)
 );
 
 CREATE INDEX var_annot_gene_idx ON variant_annotation(gene_id);
@@ -77,13 +65,11 @@ CREATE TABLE region (
 
   id       UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
   chr                 VARCHAR(8) NOT NULL ,
-  start               INT NOT NULL,
-  end                 INT NOT NULL,
-
-  KEY pos_idx  (chr, start, end)
+  region_start               INT NOT NULL,
+  region_end                 INT NOT NULL
 );
 
-CREATE INDEX region_idx ON region(chr, start, end);
+CREATE INDEX region_idx ON region(chr, region_start, region_end);
 
 
 CREATE TABLE gene_exon (
@@ -91,9 +77,7 @@ CREATE TABLE gene_exon (
   gene_id         UUID references gene(id),
   region_id         UUID references region(id),
 
-  exon_nr   INT,
-
- PRIMARY KEY idx (rid, gid)
+  exon_nr   INT
 );
 
 CREATE INDEX gene_exon_idx ON gene_exon(gene_id, region_id);
