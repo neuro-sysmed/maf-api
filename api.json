@@ -1,0 +1,10 @@
+{
+  "name": "maf-api",
+  "database": "postgresql://maf:gGP5YF5GI8kYdOncqa@localhost/maf",
+  "logfile": "api.log",
+  "server": {
+    "port": 8080,
+    "template_path": "templates",
+    "debug": false
+  }
+}
