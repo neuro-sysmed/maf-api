@@ -6,10 +6,10 @@ CREATE TABLE project (
 CREATE TABLE variant (
   id    UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
 
-  chr             VARCHAR(8) NOT NULL,
+  chrom           VARCHAR(8) NOT NULL,
   pos 		      INT NOT NULL,
-  ref             VARCHAR(100) NOT NULL,
-  alt             VARCHAR(100) NOT NULL
+  ref             VARCHAR(1000) NOT NULL,
+  alt             VARCHAR(1000) NOT NULL
 
 );
 
@@ -22,9 +22,9 @@ CREATE TABLE project_variant (
   project_id         UUID references project(id),
   variant_id         UUID references variant(id),
 
-  MAF		         FLOAT,	  
-  quality	         FLOAT,  
-  allele_count	     INT NOT NULL
+  maf		         FLOAT,
+  coverage       INT DEFAULT 0,
+  alt_alleles    INT DEFAULT 0
 );
 
 CREATE INDEX project_variant_proj_idx ON project_variant(project_id);
