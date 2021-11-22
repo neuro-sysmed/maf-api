@@ -93,20 +93,24 @@ def mafs_cmd(args) -> None:
             print(f"No AF! {r}")
             continue
 
+        an =  r.info['AN']
+
         alts = r.alts
-        afs  = r.info['AF']
-        coverage =  r.info['AN']
+        afs  = r.info['AC']
         acs  = r.info['AC']
+        ac_homs  = r.info['AC_Hom']
 
         for index, alt in enumerate(alts):
             af = afs[index]
             ac = acs[index]
+            ac_hom = ac_homs[index]
             if af == 0:
                 continue
 
 #            print(r.chrom, r.pos, r.ref, alt, af)
             var_id = db.variant_add(r.chrom, r.pos, r.ref, alt)
-            db.project_variant_add( project_id, var_id, af, coverage=coverage, alt_alleles=ac)
+            db.project_variant_add( project_id, var_id, allele_number=an, allele_count=ac,  allele_count_hom=ac_hom, frequency=af)
+
         count += 1
         if count % 1000 == 0:
             print(f"{count} (1000 vars in {(time.time() - start_time):.2f} seconds)...")
@@ -122,7 +126,7 @@ def main():
 
     parser = argparse.ArgumentParser(description='map import tool')
     parser.add_argument('-c', '--config', default="api.json", help="config file, can be overridden by parameters")
-    parser.add_argument('command', nargs='+', help="{}".format(",".join(commands)))
+    parser.add_argument('command', nargs='+', help="{}".format(",".join(commands.values())))
 
     args = parser.parse_args()
 
@@ -148,6 +152,10 @@ def main():
     elif command == 'annotation':
         args_utils.min_count_subcommand(1, len(args.command), name="acls")
         acls_command(args)
+    elif command == 'help':
+        parser.print_help()
+        sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

@@ -13,8 +13,8 @@ CREATE TABLE variant (
 
 );
 
-CREATE INDEX variant_var_idx ON variant (chr, pos, ref, alt);
-CREATE INDEX variant_pos_idx ON variant (chr, pos);
+CREATE INDEX variant_var_idx ON variant (chrom, pos, ref, alt);
+CREATE INDEX variant_pos_idx ON variant (chrom, pos);
 
 CREATE TABLE project_variant (
 
@@ -22,9 +22,10 @@ CREATE TABLE project_variant (
   project_id         UUID references project(id),
   variant_id         UUID references variant(id),
 
+  allele_number  INT DEFAULT 0,
   allele_count   INT DEFAULT 0,
-  frequency      FLOAT DEFAULT 0,
-  allele_number  INT DEFAULT 0
+  allele_count_hom INT DEFAULT 0,
+  frequency      FLOAT DEFAULT 0
 
 );
 
@@ -65,12 +66,12 @@ CREATE INDEX var_annot_var_idx ON variant_annotation(variant_id);
 CREATE TABLE region (
 
   id       UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
-  chr                 VARCHAR(8) NOT NULL ,
+  chrom                 VARCHAR(8) NOT NULL ,
   region_start               INT NOT NULL,
   region_end                 INT NOT NULL
 );
 
-CREATE INDEX region_idx ON region(chr, region_start, region_end);
+CREATE INDEX region_idx ON region(chrom, region_start, region_end);
 
 
 CREATE TABLE gene_exon (

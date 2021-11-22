@@ -51,30 +51,42 @@ class DB(object):
     def variant_add(self, chrom:str, pos:int, ref:str, alt:str) -> str:
 
         v = self._db.get('variant', chrom=chrom, pos=pos, ref=ref, alt=alt)
-        #print( v )
+        print( f"v (va) {v}" )
         
         if v is not None and v != []:
+            print( 'returning id...')
             return v[0]['id']
 
-        self._db.add('variant', {'chrom': chrom, 'pos': pos, 'ref':ref, 'alt':alt})
+        print('adding variant')
+        p = self._db.add('variant', {'chrom': chrom, 'pos': pos, 'ref':ref, 'alt':alt})
+
+        print( "getting variant...")
         v = self._db.get('variant', chrom=chrom, pos=pos, ref=ref, alt=alt)
+        print( f"v (va2) {v}" )
         return v[0]['id']
 
 
-    def project_variant_add(self, project_id:str, variant_id:str, maf:float, coverage:int=0, alt_alleles:int=0) -> str:
+    def project_variant_add(self, project_id:str, variant_id:str, allele_number:int, allele_count:int,  allele_count_hom:int, frequency:float) -> str:
         v = self._db.get('project_variant', project_id=project_id, variant_id=variant_id)
+        print( v )
         if v is not None and v != []:
             v = v[0]
-            if v['maf'] == maf:
-#                print('already stored')
+            print( v )
+            if v['frequency'] == frequency:
+                print('already stored')
                 return
-#            print('update MAF')
-            v['maf'] = maf
+            print('update MAF')
+            v = {'project_id': project_id, 'variant_id': variant_id, 
+                 'allele_number': allele_number, 'allele_count': allele_count, 
+                 'allele_count_hom': allele_count_hom, 'frequency':frequency}
             self._db.update('project_variant', v, {'id':id})
+#            return v['id']
         else:
-#            print('create MAF')
-            self._db.add('project_variant', {'project_id': project_id, 'variant_id': variant_id, 
-                                             'maf':maf, 'coverage':coverage, 'alt_alleles': alt_alleles})
+            print('adding AF')
+            v = self._db.add('project_variant', {'project_id': project_id, 'variant_id': variant_id, 
+                                             'allele_number': allele_number, 'allele_count': allele_count, 
+                                             'allele_count_hom': allele_count_hom, 'frequency':frequency})
+#            return v[0]['id']
 
 
     def region_get(self, chrom:str, start:int, end:int) -> list:
