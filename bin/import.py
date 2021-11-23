@@ -41,7 +41,7 @@ def export_cmd(args) -> None:
         print("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO")
         for v in db.variants():
             print("\t".join([v['chrom'], str(v['pos']), ".", v['ref'], v['alt'], '.','.','.']))
-    elif command == 'unannoated':
+    elif command == 'unannotated':
         facade.print_vcf(unannotated=True)
     
 
