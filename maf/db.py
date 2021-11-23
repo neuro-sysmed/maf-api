@@ -87,12 +87,24 @@ class DB(object):
 #            return v[0]['id']
 
 
-    def region_get(self, chrom:str, start:int, end:int) -> list:
-        q = f"SELECT * FROM VARIANT WHERE chrom='{chrom}' and pos>={start} and pos<={end};"
 
-        vars = self._db.get_as_dict(q)
-        for var in vars:
-            var['mafs'] = self.mafs(var['id'])
+    def project_variant(self, project_id:str, variant_id:str) -> dict:
+        v = self._db.get_single('project_variant', project_id=project_id, variant_id=variant_id)
+        return v
+
+
+    def variants_in_region(self, chrom:str, start:int=None, end:int=None) -> list:
+        q = f"SELECT * FROM variant WHERE chrom='{chrom}' "
+
+        if start is not None:
+            q += f" AND pos >= {start}"
+
+        if end is not None:
+            q += f" AND pos <= {end}"
+
+
+#        print( f"Q :: {q}  order by chrom,pos;" )
+        vars = self._db.get_as_dict(f"{q} order by chrom,pos;")
         return vars
 
 
