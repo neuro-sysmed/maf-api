@@ -144,7 +144,7 @@ def main():
     try:
         tornado.run_app(urls, port=config.get('port', 8008))
     except KeyboardInterrupt:
-        logger.info(f'stopping nels_galaxy_api')
+        logger.info(f'stopping maf_api')
 
 
 

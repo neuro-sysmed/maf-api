@@ -75,7 +75,7 @@ def project_cmd(args) -> None:
         print("import project update <id> <new project name>")
         print("import project delete <id>")
 
-def mafs_cmd(args) -> None:
+def import_cmd(args) -> None:
 
     name = args_utils.get_or_fail(args, "Missing project name")
     project_id = db.project_create(name)
@@ -96,7 +96,7 @@ def mafs_cmd(args) -> None:
         an =  r.info['AN']
 
         alts = r.alts
-        afs  = r.info['AC']
+        afs  = r.info['AF']
         acs  = r.info['AC']
         ac_homs  = r.info['AC_Hom']
 
@@ -122,7 +122,7 @@ def mafs_cmd(args) -> None:
 
 def main():
 
-    commands = {'p':'project', 'm':'mafs', 'a':'annotation', 'e': 'export', 'h':'help'}
+    commands = {'p':'project', 'i':'import', 'a':'annotation', 'e': 'export', 'h':'help'}
 
     parser = argparse.ArgumentParser(description='map import tool')
     parser.add_argument('-c', '--config', default="api.json", help="config file, can be overridden by parameters")
@@ -145,8 +145,8 @@ def main():
 
     if command == 'project':
         project_cmd(args.command)
-    elif command == 'mafs':
-        mafs_cmd(args.command)
+    elif command == 'import':
+        import_cmd(args.command)
     elif command == 'export':
         export_cmd(args.command)
     elif command == 'annotation':

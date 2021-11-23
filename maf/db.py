@@ -51,38 +51,36 @@ class DB(object):
     def variant_add(self, chrom:str, pos:int, ref:str, alt:str) -> str:
 
         v = self._db.get('variant', chrom=chrom, pos=pos, ref=ref, alt=alt)
-        print( f"v (va) {v}" )
+#        print( f"v (va) {v}" )
         
         if v is not None and v != []:
-            print( 'returning id...')
+#            print( 'returning id...')
             return v[0]['id']
 
-        print('adding variant')
+#        print('adding variant')
         p = self._db.add('variant', {'chrom': chrom, 'pos': pos, 'ref':ref, 'alt':alt})
 
-        print( "getting variant...")
+#        print( "getting variant...")
         v = self._db.get('variant', chrom=chrom, pos=pos, ref=ref, alt=alt)
-        print( f"v (va2) {v}" )
+#        print( f"v (va2) {v}" )
         return v[0]['id']
 
 
     def project_variant_add(self, project_id:str, variant_id:str, allele_number:int, allele_count:int,  allele_count_hom:int, frequency:float) -> str:
         v = self._db.get('project_variant', project_id=project_id, variant_id=variant_id)
-        print( v )
         if v is not None and v != []:
             v = v[0]
-            print( v )
+            id = v['id']
             if v['frequency'] == frequency:
-                print('already stored')
+#                print('already stored')
                 return
-            print('update MAF')
-            v = {'project_id': project_id, 'variant_id': variant_id, 
-                 'allele_number': allele_number, 'allele_count': allele_count, 
+#            print('update MAF')
+            v = {'allele_number': allele_number, 'allele_count': allele_count, 
                  'allele_count_hom': allele_count_hom, 'frequency':frequency}
-            self._db.update('project_variant', v, {'id':id})
+            self._db.update('project_variant', v, {'id': id})
 #            return v['id']
         else:
-            print('adding AF')
+#            print('adding AF')
             v = self._db.add('project_variant', {'project_id': project_id, 'variant_id': variant_id, 
                                              'allele_number': allele_number, 'allele_count': allele_count, 
                                              'allele_count_hom': allele_count_hom, 'frequency':frequency})
