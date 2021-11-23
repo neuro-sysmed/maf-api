@@ -43,7 +43,7 @@ class ProjectsHandler ( tornado.BaseHandler ):
 class ProjectHandler ( tornado.BaseHandler ):
 
     def endpoint(self):
-        return("/project")
+        return("/project/[id/name]/")
 
     def get(self, project_id:str):
         logger.debug("get project")
@@ -57,7 +57,7 @@ class ProjectHandler ( tornado.BaseHandler ):
 class VariantIdHandler ( tornado.BaseHandler ):
 
     def endpoint(self):
-        return("/variant/[id]/")
+        return("/variant/[id/name]/")
 
     def get(self, variant_id:str):
         logger.debug("get variant")
@@ -85,7 +85,7 @@ class VariantHandler ( tornado.BaseHandler ):
 class RegionHandler ( tornado.BaseHandler ):
 
     def endpoint(self):
-        return("/region/chrom/start/end/")
+        return("/region/[chrom]/[start]/[end]/")
 
     def get(self, chrom:str, start:int, end:int) -> None:
         logger.debug("get region")

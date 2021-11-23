@@ -50,11 +50,16 @@ def query(maf_db, columns:list, regions:list=None, projects:list=None, frequency
         for variant in variants:
             var = [variant['chrom'], variant['pos'], variant['ref'], variant['alt']]
             var_info = False
+            var_lowest_freq = 1.0
             for db_project in db_projects:
 
                 project_variant = maf_db.project_variant(db_project['id'], variant['id'])
 #                print( project_variant )
                 c_map = {'AN': 'allele_number', 'AC': 'allele_count', 'AC_Hom': 'allele_count_hom', 'AF': 'frequency'}
+#                print( project_variant[ 'frequency' ] )
+                if project_variant is not None and  var_lowest_freq > float(project_variant[ 'frequency' ]):
+                    var_lowest_freq = float(project_variant[ 'frequency' ])
+
                 for column in columns:
                     if column not in c_map:
                         raise RuntimeError(f"Unknown column {column}")
@@ -66,7 +71,7 @@ def query(maf_db, columns:list, regions:list=None, projects:list=None, frequency
 #                var.append( project_variant['allele_number'])
 #                var.append( project_variant['allele_count_hom'])
 #                var.append( project_variant['frequency'])
-            if var_info:
+            if var_info and var_lowest_freq < float(frequency):
                 res.append(var)
 
         print( tabulate.tabulate(res, headers="firstrow", tablefmt='psql'))

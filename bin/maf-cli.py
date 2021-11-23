@@ -68,8 +68,12 @@ def query_cmd(args:list=[], as_json:bool=False) -> None:
     if 'columns' not in args:
         args['columns'] = ['AN','AF']
 
+    frequency = 1.0
+    if 'frequency' in args:
+        frequency = args['frequency'][0]
 
-    facade.query(db, columns=args['columns'], regions=args.get('region', None), projects=args.get('project', None), frequency=args.get('frequency', 1.0), as_json=as_json)
+
+    facade.query(db, columns=args['columns'], regions=args.get('region', None), projects=args.get('project', None), frequency=frequency, as_json=as_json)
 
 
 
