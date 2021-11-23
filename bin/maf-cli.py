@@ -47,6 +47,33 @@ def export_cmd(args) -> None:
 
 
 
+def query_cmd(args:list=[], as_json:bool=False) -> None:
+
+    if 'help' in args:
+        print("Help:")
+        print("Query variants")
+        print("==========================")
+        print("query region:[chrom:from-to] region:[chrom]")
+        print("query region:[chrom:from-to] region:[chrom] r:[chr1,chr2,...]")
+        print("query frequency:[less than fraction, eg 0.1]")
+        print("query f:[less than fraction, eg 0.1]")
+        print("query project:[name] p:[p1,p2,p3]")
+        print("query columns:[AN,AC, AC_Hom, AF] (defaults: AN + AF)")
+        sys.exit(1)
+
+
+
+    args_mapping = {'r': 'region', 'f': 'frequency', 'p': 'project', 'c':'columns'}
+    args = args_utils.group_args(args, args_mapping)
+    if 'columns' not in args:
+        args['columns'] = ['AN','AF']
+
+
+    facade.query(db, columns=args['columns'], regions=args.get('region', None), projects=args.get('project', None), frequency=args.get('frequency', 1.0), as_json=as_json)
+
+
+
+
 def project_cmd(args) -> None:
     commands = {'c':'create', 'l':'list', 'u':'update', 'd': 'delete', 'h':'help'}
     if len(args) == 0:
@@ -122,17 +149,19 @@ def import_cmd(args) -> None:
 
 def main():
 
-    commands = {'p':'project', 'i':'import', 'a':'annotation', 'e': 'export', 'h':'help'}
+    commands = {'q': 'query', 'p':'project', 'i':'import', 'a':'annotate', 'e': 'export', 'h':'help'}
 
     parser = argparse.ArgumentParser(description='map import tool')
     parser.add_argument('-c', '--config', default="api.json", help="config file, can be overridden by parameters")
-    parser.add_argument('command', nargs='+', help="{}".format(",".join(commands.values())))
+    parser.add_argument('command', nargs='*', help="{}".format(",".join(commands.values())))
 
     args = parser.parse_args()
 
+    args_utils.min_count(1, len(args.command),
+                         msg="maf-cli takes one of the following commands: {}".format(args_utils.pretty_commands(commands)))
+
 
     args.config = config_utils.readin_config_file( args.config )
-
     if len(args.command) == 0:
         args.command.append('help')
 
@@ -143,13 +172,15 @@ def main():
     db = maf_db.DB()
     db.connect( args.config.database )
 
+    if command == 'query':
+        query_cmd(args.command)
     if command == 'project':
         project_cmd(args.command)
     elif command == 'import':
         import_cmd(args.command)
     elif command == 'export':
         export_cmd(args.command)
-    elif command == 'annotation':
+    elif command == 'annotate':
         args_utils.min_count_subcommand(1, len(args.command), name="acls")
         acls_command(args)
     elif command == 'help':
