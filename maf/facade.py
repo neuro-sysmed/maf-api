@@ -39,7 +39,6 @@ def query(maf_db, columns:list, regions:list=None, projects:list=None, frequency
         for region in regions:
             fields = re.split(r":|-", region)
             variants += maf_db.variants_in_region( *fields, )
-#            print( variants )
     else:
         variants = maf_db.variants(order='chrom, pos')
 

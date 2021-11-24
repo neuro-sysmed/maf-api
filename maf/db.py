@@ -115,3 +115,8 @@ class DB(object):
             del mf['id']
         return mfs
 
+
+    def annotation_add(self, variant_id:str, **values) -> None:
+        values['variant_id'] = variant_id
+        print( values )
+        self._db.add('variant_annotation', values)
