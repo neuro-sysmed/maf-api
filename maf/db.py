@@ -32,7 +32,7 @@ class DB(object):
 
         if v is not None and v != []:
             v = v[0]
-            v['mafs'] = self.mafs(v['id'])
+            v['frequencies'] = self.project_afs(v['id'])
             return v
 
         return None
@@ -42,7 +42,7 @@ class DB(object):
 
         if v is not None and v != []:
             v = v[0]
-            v['mafs'] = self.mafs(v['id'])
+            v['frequencies'] = self.project_afs(v['id'])
             print( v )
             return v
 
@@ -108,9 +108,11 @@ class DB(object):
         return vars
 
 
-    def mafs(self, variant_id:str) -> list:
+    def project_afs(self, variant_id:str) -> list:
         mfs = self._db.get('project_variant', variant_id=variant_id)
         for mf in mfs:
+            project = self.projects(id=mf['project_id'])
+            mf['project_name'] = project[0]['name']
             del mf['variant_id']
             del mf['id']
         return mfs
