@@ -110,10 +110,27 @@ class DB(object):
 
     def project_afs(self, variant_id:str) -> list:
         mfs = self._db.get('project_variant', variant_id=variant_id)
+        total_allele_number = 0
+        total_allele_count = 0
+        total_allele_count_hom = 0
         for mf in mfs:
             project = self.projects(id=mf['project_id'])
             mf['project_name'] = project[0]['name']
             del mf['variant_id']
             del mf['id']
+            total_allele_number    += mf['allele_number']
+            total_allele_count     += mf['allele_count']
+            total_allele_count_hom += mf['allele_count_hom']
+
+        total_frequency = total_allele_count/total_allele_number*1.0
+
+        mfs.append({'project_name': 'total',
+                    'allele_number':total_allele_number,
+                    'allele_count': total_allele_count,
+                    'allele_count_hom': total_allele_count_hom, 
+                    'frequency': total_frequency})
+
+
+
         return mfs
 
