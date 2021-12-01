@@ -88,7 +88,8 @@ def project_cmd(args) -> None:
 
     if command == 'create':
         name = args_utils.get_or_fail(args, "Missing project name")
-        print(db.project_create(name))
+        descr = args_utils.get_or_default(args, "")
+        db.project_create(name, descr)
     elif command == 'list':
         projects = db.projects()
         print( tabulate(projects, headers={'id':'id', 'name':'name'}, tablefmt='psql'))
@@ -106,13 +107,46 @@ def project_cmd(args) -> None:
         print("import project update <id> <new project name>")
         print("import project delete <id>")
 
+
+def utils_cmd(args) -> None:
+    commands = {'i':'import', 'c':'calc-frequencies', 'e':'export', 'd': 'delete-frequencies', 'h':'help'}
+    if len(args) == 0:
+        args.append('help')
+
+    command = args.pop(0)
+    command = args_utils.valid_command(command, commands)
+
+    if command == 'import':
+        import_cmd(args)
+    elif command == 'export':
+        export_cmd(args)
+    elif command == 'calc-frequencies':
+        facade.calc_frequencies(db)
+        pass
+    elif command == 'delete-frequencies':
+        pass
+    else:
+        print("Help\n-----------------")
+        print("utils import <project-name> <vcf_file>")
+        print("utils export")
+        print("utils calc-frequencies")
+        print("utils delete-frequencies")
+
+
 def import_cmd(args) -> None:
 
     name = args_utils.get_or_fail(args, "Missing project name")
     project_id = db.project_create(name)
+    project  = db.projects(id = project_id)[0]
+    
 
     vcf = args_utils.get_or_fail(args, "Missing vcf file")
     vcf_in = VariantFile(vcf)  # auto-detect input format
+    samples = len(vcf_in.header.samples)
+    project['sample_count'] = samples
+    print( list(vcf_in.header.samples ))
+#    sys.exit()
+    db.project_update( project )
     count = 0
     print("Importing variants ...")
     start_time = time.time()
@@ -153,7 +187,7 @@ def import_cmd(args) -> None:
 
 def main():
 
-    commands = {'q': 'query', 'p':'project', 'i':'import', 'a':'annotate', 'e': 'export', 'h':'help'}
+    commands = {'q': 'query', 'p':'project', 'u':'utils', 'i':'import', 'a':'annotate', 'e': 'export', 'h':'help'}
 
     parser = argparse.ArgumentParser(description='map import tool')
     parser.add_argument('-c', '--config', default="api.json", help="config file, can be overridden by parameters")
@@ -180,10 +214,8 @@ def main():
         query_cmd(args.command)
     if command == 'project':
         project_cmd(args.command)
-    elif command == 'import':
-        import_cmd(args.command)
-    elif command == 'export':
-        export_cmd(args.command)
+    elif command == 'utils':
+        utils_cmd(args.command)
     elif command == 'annotate':
         args_utils.min_count_subcommand(1, len(args.command), name="acls")
         acls_command(args)

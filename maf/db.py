@@ -15,8 +15,8 @@ class DB(object):
         return self._db.get('project', **values)
 
 
-    def project_create(self, name:str) -> dict:
-        return self._db.add_unique('project', {'name': name}, 'name')
+    def project_create(self, name:str, descr:str="") -> dict:
+        return self._db.add_unique('project', {'name': name, 'description': descr}, 'name')
 
     def project_update(self, values: dict) -> dict:
         self._db.update('project', values, {'id': values['id']})
@@ -66,6 +66,10 @@ class DB(object):
         return v[0]['id']
 
 
+    def variant_update(self, values: dict) -> dict:
+        self._db.update('variant', values, {'id': values['id']})
+
+
     def project_variant_add(self, project_id:str, variant_id:str, allele_number:int, allele_count:int,  allele_count_hom:int, frequency:float) -> str:
         v = self._db.get('project_variant', project_id=project_id, variant_id=variant_id)
         if v is not None and v != []:
@@ -105,6 +109,7 @@ class DB(object):
 
 #        print( f"Q :: {q}  order by chrom,pos;" )
         vars = self._db.get_as_dict(f"{q} order by chrom,pos;")
+#        print( vars )
         return vars
 
 

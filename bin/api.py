@@ -89,7 +89,7 @@ class RegionHandler ( tornado.BaseHandler ):
 
     def get(self, chrom:str, start:int, end:int) -> None:
         logger.debug("get region")
-        data = db.region_get(chrom, start, end)
+        data = db.variants_in_region(chrom, start, end)
         if data is None:
             return self.send_response_404()
 
@@ -119,7 +119,7 @@ def main():
     if args.logfile:
         config.logfile = args.logfile
     
-    print(config)
+#    print(config)
 
 
     logger.init(name=config.name, log_file=config.logfile )
