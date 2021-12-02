@@ -1,15 +1,29 @@
+CREATE TABLE meta (
+  id             UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
+
+  name           VARCHAR(80) NOT NULL,
+  value          VARCHAR(80) NOT NULL
+);
+
 CREATE TABLE project (
   id    UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
-  name  VARCHAR(80) UNIQUE
+  name  VARCHAR(80) UNIQUE,
+  description TEXT,
+  sample_count INT DEFAULT 0
 );
 
 CREATE TABLE variant (
   id    UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
 
-  chrom           VARCHAR(8) NOT NULL,
-  pos 		        INT NOT NULL,
-  ref             VARCHAR(1000) NOT NULL,
-  alt             VARCHAR(1000) NOT NULL
+  chrom            VARCHAR(8) NOT NULL,
+  pos 		         INT NOT NULL,
+  ref              VARCHAR(1000) NOT NULL,
+  alt              VARCHAR(1000) NOT NULL,
+
+  allele_number    INT,
+  allele_count     INT,
+  allele_count_hom INT,
+  frequency        FLOAT
 
 );
 
@@ -41,7 +55,6 @@ CREATE TABLE gene (
 
 CREATE INDEX gene_name_idx ON gene(name);
 CREATE INDEX gene_trans_idx ON gene(transcript);
-
 
 CREATE TABLE variant_annotation (
 

@@ -74,3 +74,26 @@ def query(maf_db, columns:list, regions:list=None, projects:list=None, frequency
                 res.append(var)
 
         print( tabulate.tabulate(res, headers="firstrow", tablefmt='psql'))
+
+
+def calc_frequencies(maf_db) -> None:
+
+    for variant in maf_db.variants():
+        freqs = maf_db.project_afs(variant_id=variant['id'])
+        allele_number = 0
+        allele_count  = 0
+        allele_count_hom = 0
+        frequency = 0
+        for freq in freqs:
+            allele_number    += freq['allele_number']
+            allele_count     += freq['allele_count']
+            allele_count_hom += freq['allele_count_hom']
+
+        frequency = allele_count/allele_number*1.0
+        
+        variant['allele_number']    = allele_number
+        variant['allele_count']     = allele_count
+        variant['allele_count_hom'] = allele_count_hom
+        variant['frequency']        = frequency
+        maf_db.variant_update( variant )
+    
