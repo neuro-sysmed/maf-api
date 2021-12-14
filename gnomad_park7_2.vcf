@@ -1,0 +1,34 @@
+##fileformat=VCFv4.2
+##INFO=<ID=AN,Number=1,Type=Integer,Description='Total number of alleles in called genotypes'>
+##INFO=<ID=AC,Number=A,Type=Integer,Description='Allele count in genotypes'>
+##INFO=<ID=NS,Number=1,Type=Integer,Description='Number of samples with data'>
+##INFO=<ID=AC_Hom,Number=A,Type=Integer,Description='Allele counts in homozygous genotypes'>
+##INFO=<ID=AC_Het,Number=A,Type=Integer,Description='Allele counts in heterozygous genotypes'>
+##INFO=<ID=AC_Hemi,Number=A,Type=Integer,Description='Allele counts in hemizygous genotypes'>
+##INFO=<ID=AF,Number=A,Type=Float,Description=Allele frequency'>
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+1	7962740	.	C	CTTTTTTTTTT	99	PASS	AN=141;AF=0.97;AC=137;AC_Hom=29;
+1	7962834	.	A	G	99	PASS	AN=538;AF=0.01;AC=5;AC_Hom=2;
+1	7962887	.	A	G	99	PASS	AN=35;AF=0.94;AC=33;AC_Hom=10;
+1	7965436	.	C	T	99	PASS	AN=369;AF=0.42;AC=156;AC_Hom=9;
+1	7969281	.	T	C	99	PASS	AN=39;AF=0.59;AC=23;AC_Hom=5;
+1	7969418	.	C	T	99	PASS	AN=688;AF=0.77;AC=533;AC_Hom=69;
+1	7969440	.	TGGG	T	99	PASS	AN=835;AF=0.78;AC=654;AC_Hom=37;
+1	7969443	.	G	T	99	PASS	AN=388;AF=0.28;AC=110;AC_Hom=10;
+1	7969444	.	G	A	99	PASS	AN=990;AF=0.13;AC=127;AC_Hom=15;
+1	7969448	.	G	T	99	PASS	AN=869;AF=0.88;AC=765;AC_Hom=268;
+1	7969449	.	G	C	99	PASS	AN=647;AF=0.16;AC=106;AC_Hom=10;
+1	7970863	.	C	T	99	PASS	AN=102;AF=0.22;AC=22;AC_Hom=5;
+1	7970864	.	T	C	99	PASS	AN=291;AF=0.42;AC=123;AC_Hom=22;
+1	7971030	.	T	C	99	PASS	AN=590;AF=0.51;AC=302;AC_Hom=134;
+1	7977588	.	T	C	99	PASS	AN=182;AF=0.48;AC=88;AC_Hom=21;
+1	7977618	.	A	G	99	PASS	AN=253;AF=0.05;AC=13;AC_Hom=4;
+1	7977622	.	G	A	99	PASS	AN=767;AF=0.32;AC=248;AC_Hom=105;
+1	7977702	.	A	ACAC	99	PASS	AN=871;AF=0.41;AC=359;AC_Hom=12;
+1	7977744	.	T	C	99	PASS	AN=774;AF=0.57;AC=445;AC_Hom=63;
+1	7977784	.	G	A	99	PASS	AN=841;AF=0.57;AC=478;AC_Hom=75;
+1	7984879	.	G	T	99	PASS	AN=816;AF=0.17;AC=139;AC_Hom=11;
+1	7984920	.	G	T	99	PASS	AN=200;AF=0.88;AC=176;AC_Hom=30;
+1	7984932	.	G	A	99	PASS	AN=895;AF=0.44;AC=397;AC_Hom=141;
+1	7985091	.	C	T	99	PASS	AN=287;AF=0.36;AC=103;AC_Hom=42;
+1	7985105	.	TCTCA	T	99	PASS	AN=313;AF=0.47;AC=146;AC_Hom=44;
