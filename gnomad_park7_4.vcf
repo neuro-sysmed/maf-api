@@ -1,0 +1,29 @@
+##fileformat=VCFv4.2
+##INFO=<ID=AN,Number=1,Type=Integer,Description='Total number of alleles in called genotypes'>
+##INFO=<ID=AC,Number=A,Type=Integer,Description='Allele count in genotypes'>
+##INFO=<ID=NS,Number=1,Type=Integer,Description='Number of samples with data'>
+##INFO=<ID=AC_Hom,Number=A,Type=Integer,Description='Allele counts in homozygous genotypes'>
+##INFO=<ID=AC_Het,Number=A,Type=Integer,Description='Allele counts in heterozygous genotypes'>
+##INFO=<ID=AC_Hemi,Number=A,Type=Integer,Description='Allele counts in hemizygous genotypes'>
+##INFO=<ID=AF,Number=A,Type=Float,Description=Allele frequency'>
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+1	7962739	.	TC	T	99	PASS	AN=687;AF=0.09;AC=63;AC_Hom=19;
+1	7962742	.	T	C	99	PASS	AN=982;AF=0.39;AC=386;AC_Hom=151;
+1	7962764	.	C	T	99	PASS	AN=915;AF=0.06;AC=55;AC_Hom=5;
+1	7962779	.	C	G	99	PASS	AN=726;AF=0.88;AC=636;AC_Hom=79;
+1	7962839	.	G	A	99	PASS	AN=814;AF=0.95;AC=774;AC_Hom=382;
+1	7965280	.	T	C	99	PASS	AN=928;AF=0.98;AC=911;AC_Hom=161;
+1	7965300	.	A	C	99	PASS	AN=762;AF=0.81;AC=617;AC_Hom=285;
+1	7965364	.	T	C	99	PASS	AN=927;AF=0.11;AC=106;AC_Hom=40;
+1	7965425	.	G	C	99	PASS	AN=814;AF=0.74;AC=603;AC_Hom=33;
+1	7965429	.	TG	T	99	PASS	AN=212;AF=0.49;AC=104;AC_Hom=49;
+1	7969387	.	G	A	99	PASS	AN=144;AF=0.29;AC=42;AC_Hom=1;
+1	7969446	.	G	T	99	PASS	AN=561;AF=0.47;AC=262;AC_Hom=28;
+1	7969454	.	A	T	99	PASS	AN=755;AF=0.58;AC=441;AC_Hom=43;
+1	7977622	.	G	A	99	PASS	AN=912;AF=0.27;AC=249;AC_Hom=41;
+1	7977654	.	C	T	99	PASS	AN=483;AF=0.46;AC=222;AC_Hom=85;
+1	7984790	.	AG	A	99	PASS	AN=119;AF=0.79;AC=94;AC_Hom=35;
+1	7984832	.	GTAAT	G	99	PASS	AN=367;AF=0.17;AC=63;AC_Hom=5;
+1	7984913	.	G	A	99	PASS	AN=251;AF=0.41;AC=104;AC_Hom=43;
+1	7985060	.	C	T	99	PASS	AN=445;AF=0.10;AC=44;AC_Hom=4;
+1	7985061	.	G	A	99	PASS	AN=549;AF=0.70;AC=386;AC_Hom=131;
