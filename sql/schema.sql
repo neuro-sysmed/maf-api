@@ -15,7 +15,7 @@ CREATE TABLE project (
 CREATE TABLE variant (
   id    UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
 
-  chrom            VARCHAR(8) NOT NULL,
+  chrom            VARCHAR(80) NOT NULL,
   pos 		         INT NOT NULL,
   ref              VARCHAR(1000) NOT NULL,
   alt              VARCHAR(1000) NOT NULL,
@@ -64,6 +64,7 @@ CREATE TABLE variant_annotation (
 
 
   transcript VARCHAR(80),
+  canonical  BOOLEAN,
   effect     VARCHAR(80),
   npos       VARCHAR(80),
   cpos	     VARCHAR(80),
