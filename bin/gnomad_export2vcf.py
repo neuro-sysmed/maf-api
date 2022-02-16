@@ -30,7 +30,7 @@ def main() -> None:
             continue
 
         
-        if random.randint(0,100) > 5:
+        if random.randint(0,100) < 5:
             continue
 
 
