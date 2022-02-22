@@ -17,7 +17,7 @@ def parse_annotation(infile:str) -> list:
     filtered = []
 
     for annotation in annotations['positions']:
-#        pp.pprint( annotation )
+        pp.pprint( annotation )
         for alt in annotation['altAlleles']:
             base_var = { 'chrom': annotation['chromosome'],
                     'pos': annotation[ 'position' ],
@@ -28,11 +28,17 @@ def parse_annotation(infile:str) -> list:
 
                 if 'transcripts' in variant:
                     for transcript in variant['transcripts']:
+                        if transcript['bioType'] !=  'protein_coding':
+                            continue
+
                         var = base_var.copy()
+
                         var[ 'dbsnp' ]  = ",".join(variant.get('dbsnp', []))
                         var[ 'gnomad'] = variant.get('gnomad',{}).get('allAn', "")
 
+                        var[ 'gene' ]  = transcript.get('hgnc', "")
                         var[ 'transcript' ]  = transcript.get('transcript', "")
+                        var[ 'canonical']   =  transcript.get('isCanonical', False)
                         var[ 'cpos' ]  = transcript.get('cdsPos', "")
                         var[ 'npos' ]  = transcript.get('proteinPos', "")
                         var[ 'DNA_change' ]  = transcript.get('codons', "")
@@ -44,6 +50,7 @@ def parse_annotation(infile:str) -> list:
 
 
                         filtered.append( var )
+#                sys.exit()
 #            filtered[ var ] = {}
 
 

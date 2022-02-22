@@ -44,13 +44,26 @@ def export_cmd(args) -> None:
             print("\t".join([v['chrom'], str(v['pos']), ".", v['ref'], v['alt'], '.','.','.']))
     elif command == 'unannotated':
         facade.print_vcf(unannotated=True)
-    
+    else:
+        print("Help:")
+        print("export of vcf")
+        print("==========================")
+        print("utils export all")
+        print("utils unannotated")
+        print("utils help")
+
+        sys.exit(1)
+
+
+
 
 
 def  import_annotation( args:list ) -> None:
 
     infile = args_utils.get_or_fail(args, "Missing nirvana json file")
     for annotation in nirvana.parse_annotation( infile ):
+        pp.pprint( annotation )
+        continue
         v = db.variant_get(chrom=annotation['chrom'], pos=annotation["pos"], ref=annotation["ref"], alt=annotation["alt"])
         del annotation['chrom']
         del annotation['pos']
@@ -154,6 +167,7 @@ def utils_cmd(args) -> None:
 
 def import_cmd(args) -> None:
 
+
     name = args_utils.get_or_fail(args, "Missing project name")
     project_id = db.project_create(name)
     project  = db.projects(id = project_id)[0]
@@ -163,7 +177,7 @@ def import_cmd(args) -> None:
     vcf_in = VariantFile(vcf)  # auto-detect input format
     samples = len(vcf_in.header.samples)
     project['sample_count'] = samples
-    print( list(vcf_in.header.samples ))
+#    print( list(vcf_in.header.samples ))
 #    sys.exit()
     db.project_update( project )
     count = 0
@@ -198,7 +212,7 @@ def import_cmd(args) -> None:
 
         count += 1
         if count % 1000 == 0:
-            print(f"{count} (1000 vars in {(time.time() - start_time):.2f} seconds)...")
+            print(f"{count} at {r.chrom}:{r.pos} (1000 vars in {(time.time() - start_time):.2f} seconds)...")
             start_time = time.time()
 
     
