@@ -15,7 +15,7 @@ CREATE TABLE project (
 CREATE TABLE variant (
   id    UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
 
-  chrom            VARCHAR(8) NOT NULL,
+  chrom            VARCHAR(80) NOT NULL,
   pos 		         INT NOT NULL,
   ref              VARCHAR(1000) NOT NULL,
   alt              VARCHAR(1000) NOT NULL,
@@ -58,19 +58,24 @@ CREATE INDEX gene_trans_idx ON gene(transcript);
 
 CREATE TABLE variant_annotation (
 
-  id       UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
-  gene_id         UUID references gene(id),
-  variant_id         UUID references variant(id),  
+  id          UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
+  gene_id     UUID references gene(id),
+  variant_id  UUID references variant(id),  
 
 
-  dbsnp      VARCHAR(80),
+  transcript VARCHAR(80),
+  canonical  BOOLEAN,
   effect     VARCHAR(80),
   npos       VARCHAR(80),
   cpos	     VARCHAR(80),
   DNA_change VARCHAR(80),
   AA_change  VARCHAR(80),
   polyphen   VARCHAR(80),
-  sift       VARCHAR(80)
+  sift       VARCHAR(80),
+
+  dbsnp      VARCHAR(80),
+  gnomad     VARCHAR(80)
+  
 );
 
 CREATE INDEX var_annot_gene_idx ON variant_annotation(gene_id);

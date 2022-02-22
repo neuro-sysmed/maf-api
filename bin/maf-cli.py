@@ -25,6 +25,7 @@ import kbr.args_utils as args_utils
 
 import maf.db as maf_db
 import maf.facade as facade
+import maf.nirvana as nirvana
 
 
 def export_cmd(args) -> None:
@@ -39,11 +40,29 @@ def export_cmd(args) -> None:
 #        facade.print_vcf()
         print("##fileformat=VCFv4.2")
         print("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO")
-        for v in db.variants():
+        for v in db.variants(order='chrom,pos'):
             print("\t".join([v['chrom'], str(v['pos']), ".", v['ref'], v['alt'], '.','.','.']))
     elif command == 'unannotated':
         facade.print_vcf(unannotated=True)
     
+
+
+def  import_annotation( args:list ) -> None:
+
+    infile = args_utils.get_or_fail(args, "Missing nirvana json file")
+    for annotation in nirvana.parse_annotation( infile ):
+        v = db.variant_get(chrom=annotation['chrom'], pos=annotation["pos"], ref=annotation["ref"], alt=annotation["alt"])
+        del annotation['chrom']
+        del annotation['pos']
+        del annotation['ref']
+        del annotation['alt']
+
+        print( v )
+        id = v['id']
+#        del v['id']
+#        del v['mafs']
+        print( annotation )
+        db.annotation_add(id, **annotation)
 
 
 
@@ -218,7 +237,10 @@ def main():
     elif command == 'utils':
         utils_cmd(args.command)
     elif command == 'annotate':
-        facade.import_annotations(db, args.command)
+        # Annovar?
+#        facade.import_annotations(db, args.command)
+        # Nirvana?
+        import_annotation( args.command )
     elif command == 'help':
         parser.print_help()
         sys.exit(1)

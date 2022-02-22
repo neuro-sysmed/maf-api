@@ -162,3 +162,8 @@ class DB(object):
             annotation['transcript'] = gene[0]['transcript']
         return annotations
 
+    def annotation_add(self, variant_id:str, **values) -> None:
+        values['variant_id'] = variant_id
+        print( values )
+        self._db.add('variant_annotation', values)
+
