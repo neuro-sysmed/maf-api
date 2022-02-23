@@ -76,15 +76,15 @@ class DB(object):
             v = v[0]
             id = v['id']
             if v['frequency'] == frequency:
-#                print('already stored')
+                print('already stored')
                 return
-#            print('update MAF')
+            print('update MAF')
             v = {'allele_number': allele_number, 'allele_count': allele_count, 
                  'allele_count_hom': allele_count_hom, 'frequency':frequency}
             self._db.update('project_variant', v, {'id': id})
 #            return v['id']
         else:
-#            print('adding AF')
+            print('adding AF')
             v = self._db.add('project_variant', {'project_id': project_id, 'variant_id': variant_id, 
                                              'allele_number': allele_number, 'allele_count': allele_count, 
                                              'allele_count_hom': allele_count_hom, 'frequency':frequency})
@@ -139,6 +139,28 @@ class DB(object):
 
         return mfs
 
+
+
+    def genes(self, **values) -> dict:
+        return self._db.get('gene', **values)
+
+
+    def gene_create(self, name:str, transcript:str) -> dict:
+        return self._db.add('gene', {'name': name, 'transcript': transcript})
+
+    def variant_annotation_add(self, gene_id:str, variant_id:str, **values):
+        values['gene_id'] = gene_id
+        values['variant_id'] = variant_id
+
+        self._db.add( 'variant_annotation', values)
+
+    def variant_annotations(self, **values) -> dict:
+        annotations = self._db.get('variant_annotation', **values)
+        for annotation in annotations:
+            gene = self.genes(id=annotation['gene_id'])
+            annotation['gene'] = gene[0]['name']
+            annotation['transcript'] = gene[0]['transcript']
+        return annotations
 
     def annotation_add(self, variant_id:str, **values) -> None:
         values['variant_id'] = variant_id

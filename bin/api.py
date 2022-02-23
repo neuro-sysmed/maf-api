@@ -68,6 +68,47 @@ class VariantIdHandler ( tornado.BaseHandler ):
         return self.send_response(data=data)
 
 
+class VariantGeneHandler ( tornado.BaseHandler ):
+
+    def endpoint(self):
+        return("/gene/[name]/")
+
+    def get(self, name:str):
+        logger.debug("get gene")
+        genes = db.genes(name=name)
+        data = []
+        variants_done = {}
+        for gene in genes:
+            for variant_annotation in db.variant_annotations(gene_id=gene['id']):
+                if variant_annotation['variant_id'] in variants_done:
+                    continue
+
+                variant = db.variant_get_by_id(variant_annotation['variant_id'])
+                variants_done[ variant['id'] ] = 1
+                data.append(variant)
+
+        if data is None:
+            return self.send_response_404()
+
+        return self.send_response(data=data)
+
+
+class AnnotationHandler ( tornado.BaseHandler ):
+
+    def endpoint(self):
+        return("/variant/annotation/[id]/")
+
+    def get(self, v_id:str):
+        logger.debug("get variant annotations")
+        data = db.variant_annotations(variant_id=v_id)
+
+        if data is None:
+            return self.send_response_404()
+
+        return self.send_response(data=data)
+
+
+
 class VariantHandler ( tornado.BaseHandler ):
 
     def endpoint(self):
@@ -134,8 +175,12 @@ def main():
             ('/projects/?', ProjectsHandler),
             ('/project/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/?', ProjectHandler),
             ('/variant/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/?', VariantIdHandler),
+            ('/variant/gene/(\w+)/?', VariantGeneHandler),
             ('/variant/(\w+)/(\d+)/(\w+)/(\w+)/?', VariantHandler),
+            ('/variant/annotation/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/?', AnnotationHandler),
+            ('/variant/annotation/(\w+)/?', AnnotationHandler),
             ('/region/(\w+)/(\d+)/(\d+)/?', RegionHandler),
+
 #            ('/mafs/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/?', MafHandler), 
             ] 
 

@@ -175,7 +175,7 @@ def import_cmd(args) -> None:
     name = args_utils.get_or_fail(args, "Missing project name")
     project_id = db.project_create(name)
     project  = db.projects(id = project_id)[0]
-    
+    print( project )    
 
     vcf = args_utils.get_or_fail(args, "Missing vcf file")
     vcf_in = VariantFile(vcf)  # auto-detect input format
@@ -211,6 +211,7 @@ def import_cmd(args) -> None:
 
 #            print(r.chrom, r.pos, r.ref, alt, af)
             var_id = db.variant_add(r.chrom, r.pos, r.ref, alt)
+            #print(project_id, var_id)
             db.project_variant_add( project_id, var_id, allele_number=an, allele_count=ac,  allele_count_hom=ac_hom, frequency=af)
 
         count += 1
@@ -254,6 +255,9 @@ def main():
     elif command == 'utils':
         utils_cmd(args.command)
     elif command == 'annotate':
+        # Annovar?
+#        facade.import_annotations(db, args.command)
+        # Nirvana?
         import_annotation( args.command )
     elif command == 'help':
         parser.print_help()
