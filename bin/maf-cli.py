@@ -62,19 +62,23 @@ def  import_annotation( args:list ) -> None:
 
     infile = args_utils.get_or_fail(args, "Missing nirvana json file")
     for annotation in nirvana.parse_annotation( infile ):
-        pp.pprint( annotation )
-        continue
+#        pp.pprint( annotation )
+#        continue
+#        sys.exit()
+        gene = db.gene_add(annotation['gene'], annotation['transcript'])
+#        print( gene )
         v = db.variant_get(chrom=annotation['chrom'], pos=annotation["pos"], ref=annotation["ref"], alt=annotation["alt"])
         del annotation['chrom']
         del annotation['pos']
         del annotation['ref']
         del annotation['alt']
+        del annotation['gene']
+        del annotation['transcript']
 
-        print( v )
+        annotation['gene_id'] = gene['id']
+
+#        print( v )
         id = v['id']
-#        del v['id']
-#        del v['mafs']
-        print( annotation )
         db.annotation_add(id, **annotation)
 
 

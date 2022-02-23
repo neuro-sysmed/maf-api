@@ -1,13 +1,19 @@
 import json
 import sys
+import gzip
 import pprint as pp
 
 import kbr.json_utils as json_utils
 
 
 def parse_annotation(infile:str) -> list:
-    
-    annotations = json_utils.read( infile )
+
+
+    if ".gz" in infile:
+        with gzip.open(infile, 'rt', encoding='UTF-8') as zipfile:
+            annotations = json.load(zipfile)
+    else:
+        annotations = json_utils.read( infile )
 
 #    print( annotations )
 
@@ -17,7 +23,7 @@ def parse_annotation(infile:str) -> list:
     filtered = []
 
     for annotation in annotations['positions']:
-        pp.pprint( annotation )
+#        pp.pprint( annotation )
         for alt in annotation['altAlleles']:
             base_var = { 'chrom': annotation['chromosome'],
                     'pos': annotation[ 'position' ],
@@ -50,6 +56,7 @@ def parse_annotation(infile:str) -> list:
 
 
                         filtered.append( var )
+#                        return filtered
 #                sys.exit()
 #            filtered[ var ] = {}
 

@@ -144,3 +144,27 @@ class DB(object):
         values['variant_id'] = variant_id
         print( values )
         self._db.add('variant_annotation', values)
+
+
+    def gene_get(self, name:str, transcript:str=None) -> dict:
+        v = self._db.get('gene', name=name, transcript=transcript)
+
+        if v is not None and v != []:
+            v = v[0]
+            return v
+
+        return None
+
+
+    def gene_add(self, name:str, transcript:str) -> str:
+
+        g = self.gene_get( name=name, transcript=transcript)
+#        print( f"v (va) {v}" )
+        
+        if g is not None:
+            return g
+
+#        print('adding variant')
+        p = self._db.add('gene', {'name': name, 'transcript': transcript})
+
+        return self.gene_get(name, transcript)

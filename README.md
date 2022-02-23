@@ -40,18 +40,26 @@ cat Participant_Status.csv | awk -F, '{gsub(/"/, "", $1);  print  $1,$3}'  | egr
 
 bcftools view --force-samples -U -S ppmi_pd ppmi.feb.1.2015.liftover.vcf | bcftools +fill-tags -- > ppmi.feb.1.2015.liftover.healthy.vcf
 
+./annotate_variation.pl --buildver hg38 --downdb seq humandb/hg38_seq
+./retrieve_seq_from_fasta.pl humandb/hg38_refGene.txt -seqdir humandb/hg38_seq -format refGene -outfile humandb/hg38_refGeneMrna.fa
 ./annotate_variation.pl -webfrom annovar -downdb avdblist -buildver hg38 .
 ./annotate_variation.pl -buildver hg38 -downdb -webfrom annovar avsnp150 humandb/
 ./annotate_variation.pl -buildver hg38 -downdb -webfrom annovar gnomad_exome  humandb/
 ./annotate_variation.pl -buildver hg38 -downdb cytoBand  humandb/
+./annotate_variation.pl -buildver hg38 -downdb clinvar_20210501 humandb/
+./annotate_variation.pl -buildver hg38 -downdb -webfrom annovar dbnsfp42c humandb/ # sift etc
+
 
 ./convert2annovar.pl --format vcf ../dbdump.vcf > dbdump.avinput
 
 ./table_annovar.pl dbdump.avinput  humandb/ -buildver hg38 -out dbdump_out -remove -protocol refGene,cytoBand,gnomad_exome,avsnp150 -operation g,r,f,f -nastring . -csvout -polish  
 
 
+```
+#Nirvana
 
+singularity exec --bind /home/:/home/ ../docker-nirvana/nirvana.sif dotnet /opt/nirvana/Nirvana.dll -c /home/refs/nirvana/Cache/GRCh38/Both -r /home/refs/nirvana/References/Homo_sapiens.GRCh38.Nirvana.dat --sd /home/refs/nirvana/SupplementaryAnnotation/GRCh38 -i dbdump.vcf -o dbdump
 
-
+```
 
 

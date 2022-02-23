@@ -49,7 +49,7 @@ CREATE INDEX project_variant_var_idx ON project_variant(variant_id);
 CREATE TABLE gene (
   id              UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
 
-  name		      VARCHAR(80),
+  name		        VARCHAR(80),
   transcript      VARCHAR(200)
 );
 
@@ -65,11 +65,11 @@ CREATE TABLE variant_annotation (
 
   transcript VARCHAR(80),
   canonical  BOOLEAN,
-  effect     VARCHAR(80),
+  effect     VARCHAR(500),
   npos       VARCHAR(80),
   cpos	     VARCHAR(80),
-  DNA_change VARCHAR(80),
-  AA_change  VARCHAR(80),
+  DNA_change VARCHAR(1000),
+  AA_change  VARCHAR(100),
   polyphen   VARCHAR(80),
   sift       VARCHAR(80),
 
