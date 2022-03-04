@@ -26,7 +26,6 @@ def _position_info(locus:dict, sample_list:list, filter:dict={}, unknown_as_ref=
     for index, sample in enumerate(locus['samples']):
         if 'isEmpty' in sample:
             continue
-#        print( sample) 
         if unknown_as_ref and sample['genotype'] in ["./.", ".", ".|."]:
             sample['genotype'] = "0/0"
 
@@ -42,21 +41,17 @@ def _position_info(locus:dict, sample_list:list, filter:dict={}, unknown_as_ref=
         else:
             gts_af[ gt ] = len(gts[gt])/(samples * 2)
 
-
-#    pp.pprint( gts_af )
-
-
     for variant in locus['variants']:
 
         print_variant = False
         if filter == {}:
             print_variant = True
 
-#        pp.pprint( variant )
         var = base_var.copy()
         var['alt'] = variant['altAllele']
         if len(variant['refAllele']) < 10 and len(variant['altAllele']) < 10:
             var[ 'vid'] = f"{variant['chromosome']}-{variant['begin']}-{variant['refAllele']}-{variant['altAllele']}"
+
         for transcript in variant.get('transcripts', []):
             for key in transcript:
                 if key in filter and transcript[ key ] in filter[ key ]:
@@ -75,13 +70,17 @@ def _position_info(locus:dict, sample_list:list, filter:dict={}, unknown_as_ref=
                 pass
 
 
-        if 'inClinvar' in filter and 'clinvar' in variant:
+        if 'inClinvar' in filter:
             print_variant = False
 
         for clinvar in variant.get('clinvar', []):
 
             if 'inClinvar' in filter and filter['inClinvar'] in clinvar['significance']:
                 print_variant = True
+
+            if 'significance' in clinvar and clinvar['significance'][0] == 'pathogenic':
+                pp.pprint( variant['clinvar'] )
+                sys.exit()
 
             for k in ['significance', 'reviewStatus', 'phenotypes']:
                 if k not in clinvar:
@@ -95,6 +94,8 @@ def _position_info(locus:dict, sample_list:list, filter:dict={}, unknown_as_ref=
         if 'gnomad' in variant:
             if 'allAf' in filter and float( filter['allAf']) < variant['gnomad'].get('allAf', 1.0):
                 print_variant = True
+
+            var['gnomad_af'] = variant['gnomad']['allAf']
 
         for mitomap in variant.get('mitomap', []):
             for k in ['diseases', 'status', 'significance']:

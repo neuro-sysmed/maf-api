@@ -19,16 +19,45 @@ CREATE TABLE variant (
   pos 		         INT NOT NULL,
   ref              VARCHAR(1000) NOT NULL,
   alt              VARCHAR(1000) NOT NULL,
+  phylopScore      float DEFAULT 0.0
+);
 
+CREATE INDEX variant_var_idx ON variant (chrom, pos, ref, alt);
+CREATE INDEX variant_pos_idx ON variant (chrom, pos);
+
+
+CREATE TABLE frequency_local (
+  id    UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
+
+  variant_id UUID references variant(id),
+  
   allele_number    INT,
   allele_count     INT,
   allele_count_hom INT,
   frequency        FLOAT
 
-);
+)
 
-CREATE INDEX variant_var_idx ON variant (chrom, pos, ref, alt);
-CREATE INDEX variant_pos_idx ON variant (chrom, pos);
+CREATE INDEX freq_db_var_idx ON frequency_db (variant_id );
+
+
+CREATE TABLE frequency_gnomad (
+  id    UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
+
+  variant_id UUID references variant(id),
+
+  all_af                FLOAT,
+  male_af               FLOAT,
+  female_af             FLOAT,
+  all_an                INT,
+  male_an               INT,
+  female_an             INT,
+  all_homo              INT,
+  male_homo             INT,
+  female_home           INT,
+  low_complexity_region BOOLEAN DEFAULT FALSE
+)
+
 
 CREATE TABLE project_variant (
 
@@ -50,7 +79,8 @@ CREATE TABLE gene (
   id              UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
 
   name		        VARCHAR(80),
-  transcript      VARCHAR(200)
+  transcript      VARCHAR(200),
+  canonical       BOOLEAN
 );
 
 CREATE INDEX gene_name_idx ON gene(name);
@@ -62,9 +92,6 @@ CREATE TABLE variant_annotation (
   gene_id     UUID references gene(id),
   variant_id  UUID references variant(id),  
 
-
-  transcript VARCHAR(80),
-  canonical  BOOLEAN,
   effect     VARCHAR(500),
   npos       VARCHAR(80),
   cpos	     VARCHAR(80),
@@ -74,9 +101,26 @@ CREATE TABLE variant_annotation (
   sift       VARCHAR(80),
 
   dbsnp      VARCHAR(80),
-  gnomad     VARCHAR(80)
   
 );
+
+
+CREATE TABLE mitomap (
+  id          UUID NOT NULL DEFAULT  uuid_generate_v4 () PRIMARY KEY,
+  gene_id     UUID references gene(id),
+  variant_id  UUID references variant(id),  
+
+  diseases	varchar(80),
+
+  hasHomoplasmy	BOOLEAN,
+  hasHeteroplasmy	BOOLEAN,	
+  var_status	 VARCHAR(80),
+  clinicalSignificance	VARCHAR(80),
+  isAlleleSpecific	boolean	DEFAULT TRUE
+
+
+)
+
 
 CREATE INDEX var_annot_gene_idx ON variant_annotation(gene_id);
 CREATE INDEX var_annot_var_idx ON variant_annotation(variant_id);

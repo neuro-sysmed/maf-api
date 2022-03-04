@@ -27,7 +27,7 @@ def main():
     parser = argparse.ArgumentParser(description='nirvana-filter: ')
 
 
-    parser.add_argument('-b', '--biotype', help="proteinCoding, ?q")
+    parser.add_argument('-b', '--biotype', help="proteinCoding, etc")
     parser.add_argument('-r', '--region', help="region to report variants in")
     parser.add_argument('-g', '--gnomad-freq', help="max allele frequency in gnomad, -1 == all")
 
